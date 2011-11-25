@@ -1,0 +1,30 @@
+{
+  "name" : "Drag'n Download",
+  "version" : "0.1",
+  "description" : "Make all the links downloadable by drag and drop.",
+  "browser_action" :
+  {
+    "default_icon" : "main-32.png",
+    "default_title" : "Drag'n Download"
+  },
+  "content_scripts" : [
+    {
+      "matches" : [
+        "http://*/*",
+        "https://*/*"
+      ],
+      "js" : [
+        "content.js"
+      ],
+      "run_at" : "document_idle",
+      "all_frames" : true
+    }
+  ],
+  "icons" : {
+    "16" : "main-16.png",
+    "32" : "main-32.png",
+    "48" : "main-48.png",
+    "64" : "main-64.png",
+    "128" : "main-128.png"
+  }
+}
