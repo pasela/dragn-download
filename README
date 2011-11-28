@@ -8,3 +8,10 @@ Version: 0.1
 Date   : November 25, 2011
 License: MIT License
 Icon   : http://www.studiomx.eu/
+
+
+
+TODO
+- Add options page.
+- Add exclude URI patterns setting.
+- Add button menu (enable/disable, etc).
