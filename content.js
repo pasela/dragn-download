@@ -46,20 +46,18 @@ function cancelEvent(event) {
 
 // Add drag and drop handler.
 function addDragHandler(elm) {
-  if (elm.nodeType !== Node.ELEMENT_NODE)
+  // Note: Element.getAttribute('href') returns a value as is. and it maybe a relative path.
+  //       HTMLAnchorElement.href has an absolute path. (DOM 2)
+  if (!(elm instanceof HTMLAnchorElement))
     return false;
 
-  var href = elm.getAttribute('href');
-  if (href === null || href === '')
+  if (elm.href === null || elm.href === '' || elm.href.charAt(0) === '#')
     return false;
 
   elm.draggable = true;
   elm.addEventListener('dragstart', function (event) {
-    event.dataTransfer.setData('DownloadURL', buildTransferData(href));
+    event.dataTransfer.setData('DownloadURL', buildTransferData(elm.href));
   }, false);
-  elm.addEventListener('dragenter', cancelEvent);
-  elm.addEventListener('dragover',  cancelEvent);
-  elm.addEventListener('drop',      cancelEvent);
 
   return true;
 }
