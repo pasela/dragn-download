@@ -1,0 +1,54 @@
+<html>
+<!--
+background page - Drag'n Download
+
+Author : Yuki <paselan@gmail.com>
+Date   : November 30, 2011
+License: MIT License
+-->
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+
+  <script>
+    var controller = {
+      init : function () {
+        if (localStorage.disabled === undefined)
+          localStorage.disabled = 0;
+
+        if (controller.isDisabled())
+          controller.disable();
+      },
+
+      isEnabled  : function () { return localStorage.disabled == 0; },
+      isDisabled : function () { return !this.isEnabled(); },
+
+      enable : function () {
+        console.log("enabled");
+        localStorage.disabled = 0;
+        chrome.browserAction.setIcon({path:"main-32.png"});
+      },
+
+      disable : function () {
+        console.log("disabled");
+        localStorage.disabled = 1;
+        chrome.browserAction.setIcon({path:"main-gray-32.png"});
+      },
+
+      toggle : function () {
+        if (controller.isEnabled())
+          controller.disable();
+        else
+          controller.enable();
+      }
+    };
+
+    controller.init();
+    chrome.browserAction.onClicked.addListener(function (tab) {
+      controller.toggle();
+    });
+  </script>
+</head>
+<body>
+</body>
+</html>

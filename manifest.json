@@ -2,6 +2,7 @@
   "name" : "Drag'n Download",
   "version" : "0.1",
   "description" : "Make all the links downloadable by drag and drop.",
+  "background_page" : "background.html",
   "browser_action" :
   {
     "default_icon" : "main-32.png",
