@@ -43,8 +43,15 @@ function buildTransferData(url, filename, mime) {
 }
 
 function onDragStart(event) {
+  console.log(event);
   if (!state.disabled) {
-    event.dataTransfer.setData('DownloadURL', buildTransferData(event.srcElement.href));
+    // Get anchor if srcElement is anchor's children.
+    var anchor = event.srcElement;
+    while (!(anchor instanceof HTMLAnchorElement) && anchor.parentNode) {
+      anchor = anchor.parentNode;
+    }
+    if (anchor)
+      event.dataTransfer.setData('DownloadURL', buildTransferData(anchor.href));
   }
 }
 
