@@ -6,7 +6,12 @@
  * License: MIT License
  */
 
+// Current state
 var state = { disabled : false };
+
+// Feedback image when dragging.
+var dragImage = document.createElement('img');
+dragImage.src = chrome.extension.getURL('main-16.png');
 
 // Path utilities.
 var Path = {
@@ -43,15 +48,17 @@ function buildTransferData(url, filename, mime) {
 }
 
 function onDragStart(event) {
-  console.log(event);
   if (!state.disabled) {
     // Get anchor if srcElement is anchor's children.
     var anchor = event.srcElement;
     while (!(anchor instanceof HTMLAnchorElement) && anchor.parentNode) {
       anchor = anchor.parentNode;
     }
-    if (anchor)
+
+    if (anchor) {
       event.dataTransfer.setData('DownloadURL', buildTransferData(anchor.href));
+      event.dataTransfer.setDragImage(dragImage, -10, 16);
+    }
   }
 }
 
