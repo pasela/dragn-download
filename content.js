@@ -2,9 +2,11 @@
  * content script - Drag'n Download
  *
  * Author : Yuki <paselan@gmail.com>
- * Date   : November 25, 2011
+ * Date   : November 30, 2011
  * License: MIT License
  */
+
+var state = { disabled : false };
 
 // Path utilities.
 var Path = {
@@ -40,8 +42,10 @@ function buildTransferData(url, filename, mime) {
   return [mime, filename, url].join(':');
 }
 
-function cancelEvent(event) {
-  event.preventDefault();
+function onDragStart(event) {
+  if (!state.disabled) {
+    event.dataTransfer.setData('DownloadURL', buildTransferData(event.srcElement.href));
+  }
 }
 
 // Add drag and drop handler.
@@ -55,9 +59,7 @@ function addDragHandler(elm) {
     return false;
 
   elm.draggable = true;
-  elm.addEventListener('dragstart', function (event) {
-    event.dataTransfer.setData('DownloadURL', buildTransferData(elm.href));
-  }, false);
+  elm.addEventListener('dragstart', onDragStart, false);
 
   return true;
 }
@@ -66,3 +68,17 @@ var links = document.getElementsByTagName('a');
 for (var i = 0; i < links.length; i++) {
   addDragHandler(links[i]);
 }
+
+// Get current state.
+chrome.extension.sendRequest({type : "getState"}, function (response) {
+  state = response;
+});
+
+// Receive new state when updated.
+chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+  // Receive settings from background page.
+  if (request.type === 'updateState') {
+    state = request.data;
+  }
+  sendResponse({});
+});

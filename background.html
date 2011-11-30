@@ -16,36 +16,61 @@ License: MIT License
         if (localStorage.disabled === undefined)
           localStorage.disabled = 0;
 
-        if (controller.isDisabled())
-          controller.disable();
+        if (this.isDisabled())
+          this.disable();
       },
 
       isEnabled  : function () { return localStorage.disabled == 0; },
       isDisabled : function () { return !this.isEnabled(); },
 
       enable : function () {
-        console.log("enabled");
         localStorage.disabled = 0;
         chrome.browserAction.setIcon({path:"main-32.png"});
+        this.sendState();
       },
 
       disable : function () {
-        console.log("disabled");
         localStorage.disabled = 1;
         chrome.browserAction.setIcon({path:"main-gray-32.png"});
+        this.sendState();
       },
 
       toggle : function () {
-        if (controller.isEnabled())
-          controller.disable();
+        if (this.isEnabled())
+          this.disable();
         else
-          controller.enable();
+          this.enable();
+      },
+
+      // Send state to content script.
+      sendState : function () {
+        var state = { disabled : this.isDisabled() };
+        var request = {
+          type : 'updateState',
+          data : state
+        };
+
+        chrome.tabs.getAllInWindow(null, function (tabs) {
+          for (var i = 0; i < tabs.length; i++) {
+            chrome.tabs.sendRequest(tabs[i].id, request, function (response) {});
+          }
+        });
       }
     };
 
     controller.init();
     chrome.browserAction.onClicked.addListener(function (tab) {
       controller.toggle();
+    });
+    chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+      var response = {};
+
+      // Return current state.
+      if (request.type === 'getState') {
+        response = { disabled : controller.isDisabled() };
+      }
+
+      sendResponse(response);
     });
   </script>
 </head>
