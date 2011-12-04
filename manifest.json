@@ -4,6 +4,7 @@
   "description" : "Make all the links downloadable by drag and drop.",
   "permissions" : ["tabs"],
   "background_page" : "background.html",
+  "options_page" : "options.html",
   "browser_action" :
   {
     "default_icon" : "main-32.png",

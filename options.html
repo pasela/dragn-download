@@ -1,0 +1,24 @@
+<!DOCTYPE HTML>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>Drag'n Download Settings</title>
+  <style>
+    h1 { font-size:125%; font-weight:bold; }
+    #page-title { border-bottom:3px double; }
+
+    section h1 { font-size:100%; margin-bottom:3px; }
+  </style>
+  <script src="lib/jquery-1.7.1.min.js"></script>
+  <script src="options.js"></script>
+</head>
+<body>
+  <h1 id="page-title">Drag'n Download Settings</h1>
+  <section>
+    <h1>Ignore URLs</h1>
+    <textarea id="ignore-urls" name="ignore-urls" rows="10" cols="50"></textarea><br />
+    <button onclick="saveOption('ignore-urls')">Save</button>
+    <button onclick="resetOption('ignore-urls')">Restore Defaults</button>
+  </section>
+</body>
+</html>
