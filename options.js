@@ -2,29 +2,27 @@
  * options page script - Drag'n Download
  *
  * Author : Yuki <paselan@gmail.com>
- * Date   : December 5, 2011
+ * Date   : December 14, 2011
  * License: MIT License
  */
 
-// Definition of Option objects. {{{
+// Definition of OptionItem objects. {{{
 
 // (abstract) An option item object.
 function OptionItem() {
   this.initialize.apply(this, arguments);
 }
+
 OptionItem.prototype = {
+  // Settings object.
+  settings : undefined,
+
   // Option name.
   name : undefined,
 
-  // Option's default value.
-  defaultValue : undefined,
-
-  // Option's current value.
-  currentValue : undefined,
-
-  initialize : function (name, defaultValue) {
+  initialize : function (name, settings) {
     this.name = name;
-    this.defaultValue = defaultValue;
+    this.settings = settings;
   },
 
   initItem : function () {
@@ -32,29 +30,15 @@ OptionItem.prototype = {
   },
 
   load : function () {
-    if (localStorage.settings) {
-      var settings = JSON.parse(localStorage.settings);
-      this.currentValue = settings[this.name];
-    }
-    return this.currentValue;
+    return this.settings.get(this.name);
   },
 
-  // Save option's value to the storage.
   save : function (value) {
-    this.currentValue = value;
-
-    var settings = {};
-    if (localStorage.settings)
-      settings = JSON.parse(localStorage.settings);
-    settings[this.name] = value;
-    localStorage.settings = JSON.stringify(settings);
+    this.settings.set(this.name, value);
   },
 
   loadItem : function () {
-    var value = this.load();
-    if (value === undefined)
-      value = this.defaultValue;
-    this.setItemValue(value);
+    this.setItemValue(this.load());
   },
 
   saveItem : function () {
@@ -62,8 +46,9 @@ OptionItem.prototype = {
   },
 
   resetItem : function () {
-    this.save(this.defaultValue);
-    this.setItemValue(this.defaultValue);
+    var value = this.settings.getDefault(this.name);
+    this.save(value);
+    this.setItemValue(value);
   },
 
   // Set value to the element.
@@ -92,9 +77,12 @@ RadioOptionItem.prototype = $.extend({}, OptionItem.prototype);
 // Select opton item object.
 function SelectOptionItem() { OptionItem.apply(this, arguments); }
 SelectOptionItem.prototype = $.extend({}, OptionItem.prototype);
+
 // }}}
 
 // Options object. {{{
+
+var settings = new DDSettings();
 
 var options = {
   items : {},
@@ -113,23 +101,16 @@ var options = {
   }
 };
 
-// }}}
+options.add(new TextOptionItem('ignore-urls', settings));
 
-//----------------------------------------------------------
-
-// Default values.
-var defaults = {
-  "ignore-urls" : "http*://mail.google.com/*"
-};
-
-// Option items. {{{
-
-options.add(new TextOptionItem('ignore-urls', defaults['ignore-urls']));
+// Run initializer when DOM constructed.
 $(function () {
   options.initItems();
 });
 
 // }}}
+
+//----------------------------------------------------------
 
 // Interface functions. {{{
 
