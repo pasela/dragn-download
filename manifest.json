@@ -5,7 +5,7 @@
   "permissions" : ["tabs"],
   "background_page" : "background.html",
   "options_page" : "options.html",
-  "browser_action" :
+  "page_action" :
   {
     "default_icon" : "main-32.png",
     "default_title" : "Drag'n Download"

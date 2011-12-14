@@ -4,7 +4,7 @@
 background page - Drag'n Download
 
 Author : Yuki <paselan@gmail.com>
-Date   : November 30, 2011
+Date   : December 14, 2011
 License: MIT License
 -->
 <head>
@@ -12,66 +12,63 @@ License: MIT License
   <title></title>
 
   <script>
-    var controller = {
-      init : function () {
-        if (localStorage.disabled === undefined)
-          localStorage.disabled = 0;
-
-        if (this.isDisabled())
-          this.disable();
+    var DDCtrl = {
+      isIgnoredURL : function (url) {
+        // TODO: 
+        return /^chrome:/.test(url);
       },
 
-      isEnabled  : function () { return localStorage.disabled == 0; },
-      isDisabled : function () { return !this.isEnabled(); },
-
-      enable : function () {
-        localStorage.disabled = 0;
-        chrome.browserAction.setIcon({path:"main-32.png"});
-        this.sendState();
-      },
-
-      disable : function () {
-        localStorage.disabled = 1;
-        chrome.browserAction.setIcon({path:"main-gray-32.png"});
-        this.sendState();
-      },
-
-      toggle : function () {
-        if (this.isEnabled())
-          this.disable();
+      updateIcon : function (tab) {
+        if (this.isIgnoredURL(tab.url))
+          chrome.pageAction.hide(tab.id);
         else
-          this.enable();
+          chrome.pageAction.show(tab.id);
       },
 
-      // Send state to content script.
-      sendState : function () {
-        var state = { disabled : this.isDisabled() };
+      toggle : function (tabId) {
+        var self = this;
         var request = {
-          type : 'updateState',
-          data : state
+          type : "toggle"
         };
-
-        chrome.tabs.getAllInWindow(null, function (tabs) {
-          for (var i = 0; i < tabs.length; i++) {
-            chrome.tabs.sendRequest(tabs[i].id, request, function (response) {});
-          }
+        chrome.tabs.sendRequest(tabId, request, function (response) {
+          if (response.state.disabled)
+            self.disable(tabId);
+          else
+            self.enable(tabId);
         });
+      },
+
+      enable : function (tabId) {
+        chrome.pageAction.setIcon({"tabId":tabId, path:"main-32.png"});
+      },
+
+      disable : function (tabId) {
+        chrome.pageAction.setIcon({"tabId":tabId, path:"main-gray-32.png"});
       }
     };
 
-    controller.init();
-    chrome.browserAction.onClicked.addListener(function (tab) {
-      controller.toggle();
-    });
     chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
       var response = {};
-
-      // Return current state.
-      if (request.type === 'getState') {
-        response = { disabled : controller.isDisabled() };
+      if (request.type === 'init') {
+        DDCtrl.updateIcon(sender.tab);
+        response.ignored = DDCtrl.isIgnoredURL(sender.tab.url);
       }
-
       sendResponse(response);
+    });
+
+    chrome.pageAction.onClicked.addListener(function (tab) {
+      DDCtrl.toggle(tab.id);
+    });
+
+    chrome.tabs.onSelectionChanged.addListener(function (tabId) {
+      chrome.tabs.get(tabId, function (tab) {
+        DDCtrl.updateIcon(tab);
+      });
+    });
+
+    chrome.tabs.getAllInWindow(null, function (tabs) {
+      for (var i = 0; i < tabs.length; i++)
+        DDCtrl.updateIcon(tabs[i]);
     });
   </script>
 </head>

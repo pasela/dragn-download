@@ -2,16 +2,9 @@
  * content script - Drag'n Download
  *
  * Author : Yuki <paselan@gmail.com>
- * Date   : November 30, 2011
+ * Date   : December 14, 2011
  * License: MIT License
  */
-
-// Current state
-var state = { disabled : false };
-
-// Feedback image when dragging.
-var dragImage = document.createElement('img');
-dragImage.src = chrome.extension.getURL('main-16.png');
 
 // Path utilities.
 var Path = {
@@ -33,22 +26,60 @@ var Path = {
   }
 };
 
-// Build data for DataTransfer.
-function buildTransferData(url, filename, mime) {
-  if (url == null || url === '')
-    return null;
+var DD = {
+  // Current state.
+  state : { disabled : false },
 
-  if (mime == null)
-    mime = 'application/octet-stream';
+  toggle : function () {
+    this.state.disabled = !this.state.disabled;
+  },
 
-  if (filename == null)
-    filename = Path.basename(Path.stripFragment(url));
+  activate : function () {
+    var links = document.getElementsByTagName('a');
+    for (var i = 0; i < links.length; i++) {
+      this.addDragHandler(links[i]);
+    }
+  },
 
-  return [mime, filename, url].join(':');
-}
+  // Get feedback image for dragging.
+  getDragImage : function () {
+    if (this.dragImage === undefined) {
+      this.dragImage = document.createElement('img');
+      this.dragImage.src = chrome.extension.getURL('main-16.png');
+    }
+    return this.dragImage;
+  },
 
-function onDragStart(event) {
-  if (!state.disabled) {
+  // Add drag and drop handler.
+  addDragHandler : function (elm) {
+    // Note: Element.getAttribute('href') returns a value as is. and it maybe a relative path.
+    //       HTMLAnchorElement.href has an absolute path. (DOM 2)
+    if (!(elm instanceof HTMLAnchorElement))
+      return false;
+
+    if (elm.href === null || elm.href === '' || elm.href.charAt(0) === '#')
+      return false;
+
+    elm.draggable = true;
+    elm.addEventListener('dragstart', this.getDragHandler(), false);
+
+    return true;
+  },
+
+  getDragHandler : function () {
+    if (this.dragHandler === undefined) {
+      var self = this;
+      this.dragHandler = function (event) {
+        return self.onDragStart(event);
+      };
+    }
+    return this.dragHandler;
+  },
+
+  onDragStart : function (event) {
+    if (this.state.disabled)
+      return;
+
     // Get anchor if srcElement is anchor's children.
     var anchor = event.srcElement;
     while (!(anchor instanceof HTMLAnchorElement) && anchor.parentNode) {
@@ -56,43 +87,38 @@ function onDragStart(event) {
     }
 
     if (anchor) {
-      event.dataTransfer.setData('DownloadURL', buildTransferData(anchor.href));
-      event.dataTransfer.setDragImage(dragImage, -10, 16);
+      event.dataTransfer.setData('DownloadURL', this.buildTransferData(anchor.href));
+      event.dataTransfer.setDragImage(this.getDragImage(), -10, 16);
     }
+  },
+
+  // Build data for DataTransfer.
+  buildTransferData : function (url, filename, mime) {
+    if (url == null || url === '')
+      return null;
+
+    if (mime == null)
+      mime = 'application/octet-stream';
+
+    if (filename == null)
+      filename = Path.basename(Path.stripFragment(url));
+
+    return [mime, filename, url].join(':');
   }
-}
+};
 
-// Add drag and drop handler.
-function addDragHandler(elm) {
-  // Note: Element.getAttribute('href') returns a value as is. and it maybe a relative path.
-  //       HTMLAnchorElement.href has an absolute path. (DOM 2)
-  if (!(elm instanceof HTMLAnchorElement))
-    return false;
-
-  if (elm.href === null || elm.href === '' || elm.href.charAt(0) === '#')
-    return false;
-
-  elm.draggable = true;
-  elm.addEventListener('dragstart', onDragStart, false);
-
-  return true;
-}
-
-var links = document.getElementsByTagName('a');
-for (var i = 0; i < links.length; i++) {
-  addDragHandler(links[i]);
-}
-
-// Get current state.
-chrome.extension.sendRequest({type : "getState"}, function (response) {
-  state = response;
-});
-
-// Receive new state when updated.
-chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
-  // Receive settings from background page.
-  if (request.type === 'updateState') {
-    state = request.data;
+function onBackgroundRequest(request, sender, sendResponse) {
+  var response = {};
+  if (request.type === 'toggle') {
+    DD.toggle();
+    response.state = DD.state;
   }
-  sendResponse({});
+  sendResponse(response);
+}
+
+chrome.extension.sendRequest({type:"init"}, function (response) {
+  if (!response.ignored) {
+    chrome.extension.onRequest.addListener(onBackgroundRequest);
+    DD.activate();
+  }
 });
