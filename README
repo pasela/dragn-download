@@ -1,10 +1,25 @@
-=========================================================================
-Chrome extension - Drag'n Download
-=========================================================================
-Make all the links downloadable by drag and drop.
+Drag'n Download
+===============
+This is Chrome extension that make all the links downloadable by drag and drop.
 
-Author : Yuki <paselan@gmail.com>
-Version: 0.1
-Date   : December 14, 2011
-License: MIT License
-Icon   : http://www.studiomx.eu/
+INTRODUCTION
+
+  Generally, dropping a link into the desktop/folder makes a shortcut to the
+  link's target URL. It couldn't download the target content. This extension
+  makes it possible.
+
+AUTHOR
+
+  Yuki <paselan@gmail.com>
+
+COPYRIGHT
+
+  Copyright (c) 2011, Yuki <paselan@gmail.com>
+
+  All the icons are made by Studiomx.eu (www.studiomx.eu)
+  All the icons are copyright (c) Studiomx.eu
+
+LICENSE
+
+  MIT License
+  (See LICENSE file.)
