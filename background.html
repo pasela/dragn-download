@@ -1,5 +1,4 @@
 <!DOCTYPE html>
-<html>
 <!--
 background page - Drag'n Download
 
@@ -7,15 +6,46 @@ Author : Yuki <paselan@gmail.com>
 Date   : December 14, 2011
 License: MIT License
 -->
+<html>
 <head>
   <meta charset="UTF-8">
   <title></title>
 
+  <script src="settings.js"></script>
   <script>
+    RegExp.escape = function(text) {
+        return text.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+    }
+
     var DDCtrl = {
+      settings : new DDSettings(),
+
       isIgnoredURL : function (url) {
-        // TODO: 
-        return /^chrome:/.test(url);
+        if (/^chrome:/.test(url))
+          return true;
+
+        var ignores = this.getIgnoreURLs();
+        return ignores.some(function (it) {
+          it = it.replace(/[-[\]{}()+?.,\\^$|#\s]/g, "\\$&");
+          var pattern = new RegExp('^' + it.replace(/\*/g, '.*') + '$');
+          return pattern.test(url);
+        });
+      },
+
+      getIgnoreURLs : function () {
+        var urls = [];
+
+        var raw = this.settings.get('ignore-urls');
+        if (raw) {
+          urls = raw.split(/(?:\r\n|\r|\n)+/).map(function (url) {
+            return url.trim();
+          }).filter(function (url) {
+            // Comment line starts with '#'.
+            return url.indexOf('#') !== 0;
+          });
+        }
+
+        return urls;
       },
 
       updateIcon : function (tab) {
@@ -60,11 +90,13 @@ License: MIT License
       DDCtrl.toggle(tab.id);
     });
 
+    /*
     chrome.tabs.onSelectionChanged.addListener(function (tabId) {
       chrome.tabs.get(tabId, function (tab) {
         DDCtrl.updateIcon(tab);
       });
     });
+    */
 
     chrome.tabs.getAllInWindow(null, function (tabs) {
       for (var i = 0; i < tabs.length; i++)
