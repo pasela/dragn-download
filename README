@@ -5,13 +5,6 @@ Make all the links downloadable by drag and drop.
 
 Author : Yuki <paselan@gmail.com>
 Version: 0.1
-Date   : November 25, 2011
+Date   : December 14, 2011
 License: MIT License
 Icon   : http://www.studiomx.eu/
-
-
-
-TODO
-- Add options page.
-- Add exclude URI patterns setting.
-- Add button menu (enable/disable, etc).
