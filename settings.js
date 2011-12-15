@@ -40,7 +40,7 @@ DDSettings.prototype = {
   initialize : function () {
     var settings = this.load();
     for (key in this.defaults) {
-      if (settings[key] === undefined)
+      if (typeof settings[key] === 'undefined')
         settings[key] = this.defaults[key];
     }
     this.save(settings);

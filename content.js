@@ -62,7 +62,7 @@ var DD = {
 
   // Get feedback image for dragging.
   getDragImage : function () {
-    if (this.dragImage === undefined) {
+    if (typeof this.dragImage === 'undefined') {
       this.dragImage = document.createElement('img');
       this.dragImage.src = chrome.extension.getURL('main-16.png');
     }
@@ -86,7 +86,7 @@ var DD = {
   },
 
   getDragHandler : function () {
-    if (this.dragHandler === undefined) {
+    if (typeof this.dragHandler === 'undefined') {
       var self = this;
       this.dragHandler = function (event) {
         return self.onDragStart(event);
