@@ -1,0 +1,36 @@
+{
+  "ExtensionName" : {
+    "message" : "Drag'n Download",
+    "description" : "Extension name."
+  },
+  "ExtensionDescription" : {
+    "message" : "\u30ea\u30f3\u30af\u5148\u3092\u30c9\u30e9\u30c3\u30b0\uff06\u30c9\u30ed\u30c3\u30d7\u3067\u4fdd\u5b58\u3067\u304d\u308b\u3088\u3046\u306b\u3057\u307e\u3059\u3002",
+    "description" : "Extension description."
+  },
+
+  "options_page_title" : {
+    "message" : "Drag'n Download \u306e\u8a2d\u5b9a",
+    "description" : "[options_page] Page title."
+  },
+  "options_ignore_urls_title" : {
+    "message" : "\u7121\u8996\u3059\u308bURL",
+    "description" : "[options_page] Ignore URLs section title."
+  },
+  "options_ignore_urls_annotation_wildcard" : {
+    "message" : "'*' \u8a18\u53f7\u306f\u4efb\u610f\u306e\u6587\u5b57\u5217\u306b\u30de\u30c3\u30c1\u3057\u307e\u3059\u3002",
+    "description" : "[options_page] Ignore URLs wildcard annotation."
+  },
+  "options_ignore_urls_annotation_comment" : {
+    "message" : "'#' \u8a18\u53f7\u304b\u3089\u59cb\u307e\u308b\u884c\u306f\u30b3\u30e1\u30f3\u30c8\u3067\u3059\u3002",
+    "description" : "[options_page] Ignore URLs comment annotation."
+  },
+
+  "button_save" : {
+    "message" : "\u4fdd\u5b58",
+    "description" : "Save button text."
+  },
+  "button_restore_defaults" : {
+    "message" : "\u521d\u671f\u8a2d\u5b9a\u306b\u623b\u3059",
+    "description" : "Restore defaults button text."
+  }
+}

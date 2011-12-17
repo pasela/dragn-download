@@ -1,0 +1,36 @@
+{
+  "ExtensionName" : {
+    "message" : "Drag'n Download",
+    "description" : "Extension name."
+  },
+  "ExtensionDescription" : {
+    "message" : "Make all the links downloadable by drag and drop.",
+    "description" : "Extension description."
+  },
+
+  "options_page_title" : {
+    "message" : "Drag'n Download Settings",
+    "description" : "[options_page] Page title."
+  },
+  "options_ignore_urls_title" : {
+    "message" : "Ignore URLs",
+    "description" : "[options_page] Ignore URLs section title."
+  },
+  "options_ignore_urls_annotation_wildcard" : {
+    "message" : "'*' will match any number of characters.",
+    "description" : "[options_page] Ignore URLs wildcard annotation."
+  },
+  "options_ignore_urls_annotation_comment" : {
+    "message" : "Lines beginning with '#' are ignored (comment lines).",
+    "description" : "[options_page] Ignore URLs comment annotation."
+  },
+
+  "button_save" : {
+    "message" : "Save",
+    "description" : "Save button text."
+  },
+  "button_restore_defaults" : {
+    "message" : "Restore Defaults",
+    "description" : "Restore defaults button text."
+  }
+}

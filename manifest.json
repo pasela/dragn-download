@@ -1,14 +1,15 @@
 {
-  "name" : "Drag'n Download",
+  "name" : "__MSG_ExtensionName__",
   "version" : "0.1",
-  "description" : "Make all the links downloadable by drag and drop.",
+  "description" : "__MSG_ExtensionDescription__",
+  "default_locale" : "en",
   "permissions" : ["tabs"],
   "background_page" : "background.html",
   "options_page" : "options.html",
   "page_action" :
   {
     "default_icon" : "main-32.png",
-    "default_title" : "Drag'n Download"
+    "default_title" : "__MSG_ExtensionName__"
   },
   "content_scripts" : [
     {

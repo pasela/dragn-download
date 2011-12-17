@@ -3,7 +3,7 @@
 options page - Drag'n Download
 
 Author : Yuki <paselan@gmail.com>
-Date   : December 14, 2011
+Date   : December 17, 2011
 License: MIT License  {{{
     Permission is hereby granted, free of charge, to any person obtaining
     a copy of this software and associated documentation files (the
@@ -40,18 +40,35 @@ License: MIT License  {{{
   <script src="lib/jquery-1.7.1.min.js"></script>
   <script src="settings.js"></script>
   <script src="options.js"></script>
+  <script>
+    function apply_i18n() {
+      $('.i18n').each(function () {
+        $(this).contents().filter(function () {
+          return this.nodeType === 3;
+        }).each(function () {
+          this.nodeValue = this.nodeValue.replace(/\$\{(\w+)\}/g, function (str, p1) {
+            return chrome.i18n.getMessage(p1);
+          });
+        });
+      });
+    }
+
+    $(function () {
+      apply_i18n();
+    });
+  </script>
 </head>
 <body>
-  <h1 id="page-title">Drag'n Download Settings</h1>
+  <h1 id="page-title" class="i18n">${options_page_title}</h1>
   <section>
     <h1>Ignore URLs</h1>
     <textarea id="ignore-urls" name="ignore-urls" rows="10" cols="50"></textarea>
-    <div class="annotation">
-      '*' will match any number of characters.<br />
-      Lines beginning with '#' are ignored (comment lines).
+    <div class="i18n annotation">
+      ${options_ignore_urls_annotation_wildcard}<br />
+      ${options_ignore_urls_annotation_comment}
     </div>
-    <button onclick="saveOption('ignore-urls')">Save</button>
-    <button onclick="resetOption('ignore-urls')">Restore Defaults</button>
+    <button class="i18n" onclick="saveOption('ignore-urls')">${button_save}</button>
+    <button class="i18n" onclick="resetOption('ignore-urls')">${button_restore_defaults}</button>
   </section>
 </body>
 </html>
