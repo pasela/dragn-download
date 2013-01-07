@@ -2,7 +2,7 @@
  * options page script - Drag'n Download
  *
  * Author : Yuki <paselan@gmail.com>
- * Date   : December 14, 2011
+ * Date   : January 7, 2013
  * License: MIT License  {{{
  *     Permission is hereby granted, free of charge, to any person obtaining
  *     a copy of this software and associated documentation files (the
@@ -33,14 +33,11 @@ function OptionItem() {
 }
 
 OptionItem.prototype = {
-  // Settings object.
-  settings : undefined,
-
-  // Option name.
-  name : undefined,
-
   initialize : function (name, settings) {
+    // Option name.
     this.name = name;
+
+    // Settings object.
     this.settings = settings;
   },
 
